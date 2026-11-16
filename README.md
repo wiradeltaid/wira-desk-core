@@ -22,7 +22,7 @@ stays in the app that owns it.
 ## Using it
 
 ```toml
-wiradesk-core = { git = "https://github.com/wiradeltaid/wira-desk-core.git", tag = "v0.1.0" }
+wiradesk-core = { git = "https://github.com/wiradeltaid/wira-desk-core.git", tag = "v0.1.1" }
 ```
 
 To work on the core and an app together, point the app at a local checkout:
