@@ -50,7 +50,8 @@ MIT-only rule for incoming code, and the DCO sign-off. Changes are listed in
 
 - MIT, copyright Wira Delta Indonesia. See [LICENSE](LICENSE).
 - [SECURITY.md](SECURITY.md): how to report a vulnerability privately, and which problems are in
-  scope.
+  scope. The Indonesian original, which prevails if the two differ, is
+  [SECURITY.id.md](SECURITY.id.md).
 - This crate does no I/O and sends nothing over the network, so it has no privacy policy of its
   own. Each app that builds on it publishes one.
 - Third-party crates: [serde](https://crates.io/crates/serde) and

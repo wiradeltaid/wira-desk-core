@@ -1,4 +1,11 @@
 # wiradesk-core Security Policy
+<!-- Copied from the Wira Delta Indonesia legal source (wira-desk-core/security.en.md) on 2026-11-16.
+     Edit the source, then copy it here again. -->
+
+This is an English translation of the Indonesian original ([SECURITY.id.md](SECURITY.id.md)). If
+the two differ in interpretation, the Indonesian text prevails.
+
+**In effect since:** 2026-11-16 · applies to wiradesk-core 0.1.1 and later
 
 wiradesk-core is a Rust library. It opens no files, makes no network requests, starts no threads,
 reads no clock, and holds no operating-system handles. Every input arrives as a function argument
@@ -36,8 +43,9 @@ small project, and honesty about that is more useful than a promise it cannot ke
 **In scope:**
 
 - a descriptor that makes `update::decide` offer a release it should refuse: a download URL outside
-  this project's release downloads, a URL that is not HTTPS, a checksum that is not 64 hexadecimal
-  characters, or a version that is not newer than the running one;
+  the release downloads of the Windows app's repository (`github.com/wiradeltaid/wira-desk`), a URL
+  that is not HTTPS, a checksum that is not 64 hexadecimal characters, or a version that is not
+  newer than the running one;
 - input that makes the crate panic, overflow, or never return. The apps call it while handling
   every key event on the desktop, so a panic there can stop shortcuts from working.
 
@@ -48,7 +56,8 @@ small project, and honesty about that is more useful than a promise it cannot ke
 - whether the downloaded installer matches `setup_sha256`. `update::decide` checks that the
   checksum has the right form, not the file, because the crate never sees the file. Comparing the
   two is the app's job, and a missing comparison is an app bug;
-- vulnerabilities in `serde` or `serde_json` themselves. Report those to their maintainers.
+- vulnerabilities in `serde` or `serde_json` themselves. They are separate projects that publish
+  their own fixes, so report those to their maintainers.
 
 **Supported versions.** Only the latest tag receives fixes. There is no long-term support branch.
 
@@ -58,3 +67,13 @@ Releases are git tags, and there are no binaries. Apps fetch the source by tag t
 each app's `Cargo.lock` records the exact commit the tag resolved to. A build from an existing
 lockfile therefore keeps using that commit even if a tag were moved; only `cargo update` would pick
 up the change, and it shows up as a lockfile diff.
+
+Tags and commits are not signed. A tag proves only that someone with push access to this repository
+created it, not who. The whole crate is source code, so the strongest verification available is
+reading it at the commit your `Cargo.lock` records. Signing tags is the real fix, and it is not in
+place yet.
+
+## Language
+
+This is an English translation of the Indonesian original. If the two differ in interpretation,
+the Indonesian text prevails.
