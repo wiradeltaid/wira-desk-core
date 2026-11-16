@@ -79,3 +79,12 @@ thirds planner", not "added thirds planner").
 
 A contribution does not grant any right to the names "Wira Desk" or "Wira Delta Indonesia". See
 "Name and trademark" in [`README.md`](README.md).
+
+## Releases
+
+Maintainers release by tag, and every tag after `v0.1.1` is signed. Move the `Unreleased` entries in
+`CHANGELOG.md` under the new version, bump `version` in `Cargo.toml`, then tag with
+`git tag -s vX.Y.Z -m "vX.Y.Z: <one line>"` and push the tag. A signing key is set per clone:
+`git config gpg.format ssh`, `git config user.signingkey <path to your .pub>`,
+`git config tag.gpgSign true`, and the key is registered on GitHub as a signing key. A tag is never
+moved or reused; a mistake is fixed by the next tag.

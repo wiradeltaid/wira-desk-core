@@ -68,10 +68,11 @@ each app's `Cargo.lock` records the exact commit the tag resolved to. A build fr
 lockfile therefore keeps using that commit even if a tag were moved; only `cargo update` would pick
 up the change, and it shows up as a lockfile diff.
 
-Tags and commits are not signed. A tag proves only that someone with push access to this repository
-created it, not who. The whole crate is source code, so the strongest verification available is
-reading it at the commit your `Cargo.lock` records. Signing tags is the real fix, and it is not in
-place yet.
+Tags `v0.1.0` and `v0.1.1` are not signed: they prove only that someone with push access to this
+repository created them, not who. Every tag after `v0.1.1` is signed with an SSH key registered to the
+maintainer's GitHub account, so GitHub marks it Verified and `git tag -v` checks it against that key.
+Commits are not signed. The whole crate is source code, so reading it at the commit your
+`Cargo.lock` records remains the strongest verification available.
 
 ## Language
 

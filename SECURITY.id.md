@@ -75,10 +75,12 @@ Rilis berupa tag git, dan tidak ada biner. Aplikasi mengambil kode sumber per ta
 lockfile yang sudah ada tetap memakai commit tersebut walaupun sebuah tag dipindahkan; hanya
 `cargo update` yang akan mengambil perubahannya, dan perubahan itu terlihat sebagai diff lockfile.
 
-Tag dan commit tidak ditandatangani. Sebuah tag hanya membuktikan bahwa seseorang dengan hak push ke
-repositori ini membuatnya, bukan siapa orangnya. Karena seluruh crate berupa kode sumber,
-verifikasi terkuat yang tersedia adalah membaca kodenya pada commit yang dicatat `Cargo.lock` Anda.
-Menandatangani tag adalah perbaikan sesungguhnya, dan itu belum dilakukan.
+Tag `v0.1.0` dan `v0.1.1` tidak ditandatangani: keduanya hanya membuktikan bahwa seseorang dengan hak
+push ke repositori ini membuatnya, bukan siapa orangnya. Setiap tag sesudah `v0.1.1` ditandatangani
+dengan kunci SSH yang terdaftar di akun GitHub pemelihara, sehingga GitHub menandainya Verified dan
+`git tag -v` memeriksanya terhadap kunci itu. Commit tidak ditandatangani. Karena seluruh crate berupa
+kode sumber, verifikasi terkuat yang tersedia tetap membaca kodenya pada commit yang dicatat
+`Cargo.lock` Anda.
 
 ## Bahasa
 
