@@ -2,29 +2,29 @@
 <!-- Copied from the Wira Delta Indonesia legal source (wira-desk-core/security.en.md) on 2026-11-16.
      Edit the source, then copy it here again. -->
 
-This is an English translation of the Indonesian original ([SECURITY.id.md](SECURITY.id.md)). If
-the two differ in interpretation, the Indonesian text prevails.
+This is an English translation of the [Indonesian
+original](https://github.com/wiradeltaid/wira-desk-core/blob/main/SECURITY.id.md). If the two differ in
+interpretation, the Indonesian text prevails.
 
 **In effect since:** 2026-11-16 · applies to wiradesk-core 0.1.1 and later
 
-wiradesk-core is a Rust library. It opens no files, makes no network requests, starts no threads,
-reads no clock, and holds no operating-system handles. Every input arrives as a function argument
-from the app that embeds it, and every result goes back as a return value.
+wiradesk-core is a sans-IO Rust library. Its code does not open files, make network requests, start
+threads, read a clock, or call operating-system APIs. Apps pass data as arguments; functions can return
+values or change data passed through mutable arguments.
 
-What it decides from that input is where the risk is. An app can pass it key and mouse events taken
-from a system-wide input hook, and decide from its answer (`Disposition`) whether to swallow them.
-Wira Desk for Windows also passes it the update descriptor it downloaded, and relies on its verdict
-about which installer URL to accept. Those two paths deserve scrutiny.
+The risk depends on how an app uses the library's decisions and types. An app can pass key and mouse
+events from a system-wide input hook to its `InputSink` implementation, then use `Disposition` to decide
+whether to pass an event onward. Wira Desk for Windows also passes its downloaded update descriptor to
+`update::decide` to determine whether to offer a release.
 
 ## Two Facts Most People Want Up Front
 
-- **No keystroke is recorded.** The only key state the crate keeps is `ModifierState`: four
-  booleans saying whether Win, Ctrl, Alt, and Shift are held. The crate has no logging, file, or
-  network call anywhere in `src/`, so a key value has nowhere to go. `InputSink` is a trait; each
-  app implements it, so what an implementation keeps is that app's code and that app's policy.
-- **Nothing is sent.** The crate makes no outbound request. The update check in Wira Desk for
-  Windows is made by the app; this crate only parses the reply the app hands to
-  `update::decide`.
+- **The crate does not record keystrokes.** `ModifierState` stores four booleans for the state of Win,
+  Ctrl, Alt, and Shift. `InputEvent::Key` carries a key value to `InputSink`, but the crate has no
+  logging, file, or network calls in `src/`. Each app implements `InputSink` and is responsible for how
+  its implementation handles or stores events.
+- **The crate sends no network requests.** Wira Desk for Windows performs the update check in the app;
+  the crate parses and checks the descriptor the app passes to `update::decide`.
 
 `#![forbid(unsafe_code)]` is set at the crate root, so the crate contains no `unsafe` code and the
 compiler refuses any.
@@ -46,8 +46,8 @@ small project, and honesty about that is more useful than a promise it cannot ke
   the release downloads of the Windows app's repository (`github.com/wiradeltaid/wira-desk`), a URL
   that is not HTTPS, a checksum that is not 64 hexadecimal characters, or a version that is not
   newer than the running one;
-- input that makes the crate panic, overflow, or never return. The apps call it while handling
-  every key event on the desktop, so a panic there can stop shortcuts from working.
+- input that makes the crate panic, overflow, or never return. A failure while an app handles input
+  can disrupt shortcuts.
 
 **Out of scope, documented rather than fixed:**
 
@@ -63,16 +63,16 @@ small project, and honesty about that is more useful than a promise it cannot ke
 
 ## Release Integrity
 
-Releases are git tags, and there are no binaries. Apps fetch the source by tag through Cargo, and
-each app's `Cargo.lock` records the exact commit the tag resolved to. A build from an existing
-lockfile therefore keeps using that commit even if a tag were moved; only `cargo update` would pick
-up the change, and it shows up as a lockfile diff.
+Releases are Git tags, with no binaries. When an app obtains a Git dependency through Cargo,
+`Cargo.lock` records the resolved commit. While that lockfile entry remains in use, builds use that
+commit even if the tag moves. Updating dependencies, changing the manifest, or regenerating the lockfile
+can produce a new resolution; check the `Cargo.lock` diff for a changed commit.
 
-Tags `v0.1.0` and `v0.1.1` are not signed: they prove only that someone with push access to this
-repository created them, not who. Every tag after `v0.1.1` is signed with an SSH key registered to the
-maintainer's GitHub account, so GitHub marks it Verified and `git tag -v` checks it against that key.
-Commits are not signed. The whole crate is source code, so reading it at the commit your
-`Cargo.lock` records remains the strongest verification available.
+Tags `v0.1.0` and `v0.1.1` are unsigned, so they provide no cryptographic proof of a signer. Every tag
+after `v0.1.1` is signed with an SSH key registered to the maintainer's GitHub account. GitHub can
+display a Verified status; to check a tag locally with `git tag -v`, configure
+`gpg.ssh.allowedSignersFile` with the signer's public key after establishing that you trust it. Commits
+are unsigned. You can also review the code at the commit recorded in your `Cargo.lock`.
 
 ## Language
 
