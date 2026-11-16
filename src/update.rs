@@ -5,8 +5,11 @@
 
 use serde::Deserialize;
 
-/// The repository this build belongs to, taken from `Cargo.toml`.
-pub const REPOSITORY: &str = env!("CARGO_PKG_REPOSITORY");
+/// The repository whose releases the updater trusts: Wira Desk for Windows. Written out rather than
+/// taken from `Cargo.toml`, because this crate now lives in its own repository and the Windows app's
+/// releases do not. This module is used only by the Windows app and leaves the core when the macOS
+/// architecture sets the core boundary.
+pub const REPOSITORY: &str = "https://github.com/wiradeltaid/wira-desk";
 
 /// Split `https://host/path` into its host and path. `None` for anything else.
 pub fn split_https(url: &str) -> Option<(&str, &str)> {
@@ -143,6 +146,13 @@ pub mod tests {
     use super::*;
 
     const GOOD_SHA: &str = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+
+    #[test]
+    fn installers_are_accepted_only_from_the_windows_app_releases() {
+        // The updater serves Wira Desk for Windows, whose releases live in its own repository,
+        // not in this crate's. A literal is the point here: the value MUST NOT follow Cargo.toml.
+        assert_eq!(REPOSITORY, "https://github.com/wiradeltaid/wira-desk");
+    }
 
     fn good_url() -> String {
         format!("{REPOSITORY}/releases/download/v0.2.0/WiraDesk-0.2.0-x64-setup.exe")

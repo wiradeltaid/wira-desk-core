@@ -11,6 +11,15 @@ release it.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-16
+
+### Fixed
+
+- `update` accepted installers only from this crate's own repository after the split, so the Windows
+  app's updater refused every real release. `update::REPOSITORY` again names
+  `https://github.com/wiradeltaid/wira-desk`, where Windows releases are published. Move pins from
+  `v0.1.0` to `v0.1.1`; `v0.1.0` should not be used.
+
 ## [0.1.0] - 2026-11-16
 
 ### Added
