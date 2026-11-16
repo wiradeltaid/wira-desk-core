@@ -1,0 +1,30 @@
+# The same three checks a contributor runs locally (CONTRIBUTING.md). The crate has no
+# operating-system code, so one Linux job covers it. Cargo.lock is not committed, as is
+# usual for a library, so each run resolves the newest compatible dependencies and
+# `--locked` is deliberately absent.
+name: ci
+
+on:
+  # CI cloud hanya saat PR ditandai ready (keputusan pemilik 2026-10-20; wdi-method ci-guide.md).
+  workflow_dispatch:
+  pull_request:
+    types: [ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test
+        run: cargo test
